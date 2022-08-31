@@ -70,7 +70,7 @@ jobs:
           name: Deploy
           command: echo "Deploying << parameters.package_name >> ..."
 
-workflow:
+workflows:
   # Workflows defined for each package.
 
   api:
