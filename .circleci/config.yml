@@ -9,14 +9,6 @@ workflows:
   version: 2
   # The main workflow responsible for triggering all other workflows
   # in which changes are detected.
-  always-run:
+  ci:
     jobs:
-      - path-filtering/filter:
-          name: check-updated-files
-          mapping: |
-            api/.* run-build-api-job true
-            app/.* run-build-app-job true
-            auth/.* run-build-auth-job true
-            gateway/.* run-build-gateway-job true
-          base-revision: master
-          config-path: .circleci/continue_config.yml
+      - trigger-workflows

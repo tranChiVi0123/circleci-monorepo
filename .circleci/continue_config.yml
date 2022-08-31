@@ -19,6 +19,12 @@ parameters:
   run-build-gateway-job:
     type: boolean
     default: false
+
+executors:
+  node:
+    docker:
+      - image: circleci/node
+
 jobs:
   build:
     parameters:
