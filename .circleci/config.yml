@@ -14,9 +14,9 @@ workflows:
       - path-filtering/filter:
           name: check-updated-files
           mapping: |
-            api/.* run-build-api-job true
-            app/.* run-build-app-job true
-            auth/.* run-build-auth-job true
-            gateway/.* run-build-gateway-job true
+            packages/api/.* run-build-api-job true
+            packages/app/.* run-build-app-job true
+            packages/auth/.* run-build-auth-job true
+            packages/gateway/.* run-build-gateway-job true
           base-revision: master
           config-path: .circleci/continue_config.yml
