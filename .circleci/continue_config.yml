@@ -73,48 +73,127 @@ jobs:
 workflows:
   # Workflows defined for each package.
 
-  api:
+  api-to-stg:
     when: << pipeline.parameters.run-build-api-job >>
     jobs:
       - build:
           name: api-build
           package_name: api
+          filters:
+            branches:
+              only: master
       - deploy:
           name: api-deploy
           package_name: api
           requires:
             - api-build
 
-  app:
+  app-to-stg:
     when: << pipeline.parameters.run-build-app-job >>
     jobs:
       - build:
           name: app-build
           package_name: app
+          filters:
+            branches:
+              only: master
       - deploy:
           name: app-deploy
           package_name: app
           requires:
             - app-build
 
-  auth:
+  auth-to-stg:
     when: << pipeline.parameters.run-build-auth-job >>
     jobs:
       - build:
           name: auth-build
           package_name: auth
+          filters:
+            branches:
+              only: master
       - deploy:
           name: auth-deploy
           package_name: auth
           requires:
             - auth-build
 
-  gateway:
+  gateway-to-stg:
     when: << pipeline.parameters.run-build-gateway-job >>
     jobs:
       - build:
           name: gateway-build
           package_name: gateway
+          filters:
+            branches:
+              only: master
+      - deploy:
+          name: gateway-deploy
+          package_name: gateway
+          requires:
+            - gateway-build
+  api-to-prod:
+    when: << pipeline.parameters.run-build-api-job >>
+    jobs:
+      - build:
+          name: api-build
+          package_name: api
+          filters:
+            tags:
+              only: /release-.*/
+            branches:
+              ignore: /.*/
+      - deploy:
+          name: api-deploy
+          package_name: api
+          requires:
+            - api-build
+
+  app-to-prod:
+    when: << pipeline.parameters.run-build-app-job >>
+    jobs:
+      - build:
+          name: app-build
+          package_name: app
+          filters:
+            tags:
+              only: /release-.*/
+            branches:
+              ignore: /.*/
+      - deploy:
+          name: app-deploy
+          package_name: app
+          requires:
+            - app-build
+
+  auth-to-prod:
+    when: << pipeline.parameters.run-build-auth-job >>
+    jobs:
+      - build:
+          name: auth-build
+          package_name: auth
+          filters:
+            tags:
+              only: /release-.*/
+            branches:
+              ignore: /.*/
+      - deploy:
+          name: auth-deploy
+          package_name: auth
+          requires:
+            - auth-build
+
+  gateway-to-prod:
+    when: << pipeline.parameters.run-build-gateway-job >>
+    jobs:
+      - build:
+          name: gateway-build
+          package_name: gateway
+          filters:
+            tags:
+              only: /release-.*/
+            branches:
+              ignore: /.*/
       - deploy:
           name: gateway-deploy
           package_name: gateway
