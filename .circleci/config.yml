@@ -7,8 +7,6 @@ orbs:
 
 workflows:
   version: 2
-  # The main workflow responsible for triggering all other workflows
-  # in which changes are detected.
   ci-stg:
     when:
       equal: [master, <<pipeline.git.branch>>]
