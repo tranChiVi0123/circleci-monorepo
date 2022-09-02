@@ -143,13 +143,12 @@ workflows:
           name: api-build
           package_name: api
           filters:
-            tags:
-              only: /release-.*/
             branches:
-              ignore: /.*/
+              only: release
       - hold:
           type: approval
-          requires: api-build
+          requires:
+          - api-build
       - deploy:
           name: api-deploy
           package_name: api
@@ -163,13 +162,12 @@ workflows:
           name: app-build
           package_name: app
           filters:
-            tags:
-              only: /release-.*/
             branches:
-              ignore: /.*/
+              only: release
       - hold:
           type: approval
-          requires: app-build
+          requires:
+          - app-build
       - deploy:
           name: app-deploy
           package_name: app
@@ -183,13 +181,12 @@ workflows:
           name: auth-build
           package_name: auth
           filters:
-            tags:
-              only: /release-.*/
             branches:
-              ignore: /.*/
+              only: release
       - hold:
           type: approval
-          requires: auth-build
+          requires:
+            - auth-build
       - deploy:
           name: auth-deploy
           package_name: auth
@@ -203,13 +200,12 @@ workflows:
           name: gateway-build
           package_name: gateway
           filters:
-            tags:
-              only: /release-.*/
             branches:
-              ignore: /.*/
+              only: release
       - hold:
           type: approval
-          requires: gateway-build
+          requires: 
+            - gateway-build
       - deploy:
           name: gateway-deploy
           package_name: gateway
