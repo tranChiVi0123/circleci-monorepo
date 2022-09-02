@@ -18,10 +18,6 @@ workflows:
             packages/app/.* run-build-app-job true
             packages/auth/.* run-build-auth-job true
             packages/gateway/.* run-build-gateway-job true
-            packages/api/.* env test
-            packages/app/.* env test
-            packages/auth/.* env test
-            packages/gateway/.* env test
           base-revision: master
           config-path: .circleci/continue_config.yml
   ci-prod:
@@ -35,9 +31,5 @@ workflows:
             packages/app/.* run-build-app-job true
             packages/auth/.* run-build-auth-job true
             packages/gateway/.* run-build-gateway-job true
-            packages/api/.* env prod
-            packages/app/.* env prod
-            packages/auth/.* env prod
-            packages/gateway/.* env prod
           base-revision: release
           config-path: .circleci/continue_config.yml
