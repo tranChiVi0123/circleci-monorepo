@@ -19,6 +19,9 @@ parameters:
   run-build-gateway-job:
     type: boolean
     default: false
+  env:
+    type: string
+    default: test
 
 executors:
   node:
@@ -43,6 +46,7 @@ jobs:
           command: |
             cat README.md 
             echo "<< parameters.package_name >> built." > build.txt
+            echo <<pipeline.parameters.env>>
       - run:
           name: Build
           command: echo "Build << parameters.package_name >> ..."
@@ -139,15 +143,17 @@ workflows:
           name: api-build
           package_name: api
           filters:
-            tags:
-              only: /release-.*/
             branches:
-              ignore: /.*/
+              only: release
+      - hold:
+          type: approval
+          requires:
+          - api-build
       - deploy:
           name: api-deploy
           package_name: api
           requires:
-            - api-build
+            - hold
 
   app-to-prod:
     when: << pipeline.parameters.run-build-app-job >>
@@ -156,15 +162,17 @@ workflows:
           name: app-build
           package_name: app
           filters:
-            tags:
-              only: /release-.*/
             branches:
-              ignore: /.*/
+              only: release
+      - hold:
+          type: approval
+          requires:
+          - app-build
       - deploy:
           name: app-deploy
           package_name: app
           requires:
-            - app-build
+            - hold
 
   auth-to-prod:
     when: << pipeline.parameters.run-build-auth-job >>
@@ -173,15 +181,17 @@ workflows:
           name: auth-build
           package_name: auth
           filters:
-            tags:
-              only: /release-.*/
             branches:
-              ignore: /.*/
+              only: release
+      - hold:
+          type: approval
+          requires:
+            - auth-build
       - deploy:
           name: auth-deploy
           package_name: auth
           requires:
-            - auth-build
+            - hold
 
   gateway-to-prod:
     when: << pipeline.parameters.run-build-gateway-job >>
@@ -190,12 +200,14 @@ workflows:
           name: gateway-build
           package_name: gateway
           filters:
-            tags:
-              only: /release-.*/
             branches:
-              ignore: /.*/
+              only: release
+      - hold:
+          type: approval
+          requires: 
+            - gateway-build
       - deploy:
           name: gateway-deploy
           package_name: gateway
           requires:
-            - gateway-build
+            - hold
