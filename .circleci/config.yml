@@ -9,39 +9,37 @@ workflows:
   version: 2
   # The main workflow responsible for triggering all other workflows
   # in which changes are detected.
-  ci:
+  ci-stg:
+    when:
+      equal: [master, <<pipeline.git.branch>>]
     jobs:
-      - when:
-          condition:
-            - equal: [master, <<pipeline.git.branch>>]
-          steps:
-            - path-filtering/filter:
-                name: check-updated-files
-                mapping: |
-                  packages/api/.* run-build-api-job true
-                  packages/app/.* run-build-app-job true
-                  packages/auth/.* run-build-auth-job true
-                  packages/gateway/.* run-build-gateway-job true
-                  packages/api/.* env test
-                  packages/app/.* env test
-                  packages/auth/.* env test
-                  packages/gateway/.* env test
-                base-revision: master
-                config-path: .circleci/continue_config.yml
-      - when:
-          condition:
-            - equal: [release, <<pipeline.git.branch>>]
-          steps:
-            - path-filtering/filter:
-                name: check-updated-files
-                mapping: |
-                  packages/api/.* run-build-api-job true
-                  packages/app/.* run-build-app-job true
-                  packages/auth/.* run-build-auth-job true
-                  packages/gateway/.* run-build-gateway-job true
-                  packages/api/.* env prod
-                  packages/app/.* env prod
-                  packages/auth/.* env prod
-                  packages/gateway/.* env prod
-                base-revision: release
-                config-path: .circleci/continue_config.yml
+      - path-filtering/filter:
+          name: check-updated-files
+          mapping: |
+            packages/api/.* run-build-api-job true
+            packages/app/.* run-build-app-job true
+            packages/auth/.* run-build-auth-job true
+            packages/gateway/.* run-build-gateway-job true
+            packages/api/.* env test
+            packages/app/.* env test
+            packages/auth/.* env test
+            packages/gateway/.* env test
+          base-revision: master
+          config-path: .circleci/continue_config.yml
+  ci-prod:
+    when:
+      equal: [release, <<pipeline.git.branch>>]
+    jobs:
+      - path-filtering/filter:
+          name: check-updated-files
+          mapping: |
+            packages/api/.* run-build-api-job true
+            packages/app/.* run-build-app-job true
+            packages/auth/.* run-build-auth-job true
+            packages/gateway/.* run-build-gateway-job true
+            packages/api/.* env prod
+            packages/app/.* env prod
+            packages/auth/.* env prod
+            packages/gateway/.* env prod
+          base-revision: release
+          config-path: .circleci/continue_config.yml
