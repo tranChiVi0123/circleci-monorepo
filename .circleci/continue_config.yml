@@ -196,18 +196,18 @@ workflows:
   gateway-to-prod:
     when: << pipeline.parameters.run-build-gateway-job >>
     jobs:
-      - build:
-          name: gateway-build
-          package_name: gateway
+      - hold:
+          type: approval
           filters:
             branches:
               only: release
-      - hold:
-          type: approval
-          requires: 
-            - gateway-build
+      - build:
+          name: gateway-build
+          package_name: gateway
+          requires:
+            - hold
       - deploy:
           name: gateway-deploy
           package_name: gateway
           requires:
-            - hold
+            - gateway-build
